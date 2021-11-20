@@ -108,8 +108,9 @@ body {
 
 .clb {
     background: none;
-    background-color: red;
-    border: 2px red solid;
+    color: white;
+    background-color: rgb(99, 12, 12);
+    border: 2px black solid;
     font-weight: bold;
     width: 90%;
     bottom: 0px;
