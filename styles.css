@@ -38,7 +38,7 @@ body {
     color: black;
     border-radius: 10px;
     font-weight: 700;
-    position: relative;
+    position: absolute;
     user-select: none;
 }
 

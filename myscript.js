@@ -1,18 +1,58 @@
 import { storageAvailable } from "./utility.js";
-
-var mousePosition;
-var offset = [0,0];
 var isDown = false;
 var dimensions;
+var leftfin, topfin;
+var count = 2;
 const cont = document.querySelector(".container");
 const subbtn = document.querySelector('.subbtn');
 const addbtn = document.querySelector(".add");
 const formcontainer = document.querySelector(".formcontainer");
 const cancelbutton = document.querySelector(".canbtn");
 
+function dragElement(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    if (document.getElementById(elmnt.id)) {
+        /* if present, the header is where you move the DIV from:*/
+        document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+    } else {
+        /* otherwise, move the DIV from anywhere inside the DIV:*/
+        elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+
+    function closeDragElement() {
+        /* stop moving when mouse button is released:*/
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+}
+
 cancelbutton.addEventListener("click", () => {
     hideform();
-}, {propagate: false});
+}, { propagate: false });
 
 
 function handleSubmit() {
@@ -27,7 +67,7 @@ subbtn.addEventListener("click", () => {
     handleSubmit();
     clearform();
     hideform();
-}, {propagate: false});
+}, { propagate: false });
 
 function clearform() {
     document.getElementById('titleid').value = "";
@@ -60,7 +100,6 @@ function addBookToLibrary(t, p, r) {
     myLibrary.push(book);
     addBookToPage(book);
 }
-
 function addBookToPage(ele) {
     let newbook = document.createElement("div");
     newbook.classList.add("book");
@@ -83,30 +122,18 @@ function addBookToPage(ele) {
     newread.textContent = "Read: ";
     let closebtn = document.createElement("button");
     closebtn.classList.add("clb");
-    closebtn.textContent="Remove book";
+    closebtn.textContent = "Remove book";
     closebtn.addEventListener("click", () => {
         newbook.remove();
-    }, {once: true, propagate: false});
+    }, { once: true, propagate: false });
     newbook.appendChild(newtitle);
     newbook.appendChild(newpages);
     newbook.appendChild(newlabel);
     newbook.appendChild(newread);
     newbook.appendChild(closebtn);
-    newbook.addEventListener("mousemove", (e) => {
-        e.preventDefault();
-        if (isDown) {
-            newbook.style.top = e.clientY - dimensions.y - 100 + "px";
-            newbook.style.left = e.clientX - dimensions.x - 100 + "px";
-        }
-    }, true);
-    newbook.addEventListener("mousedown", ()=> {
-        dimensions = newbook.getBoundingClientRect();
-        isDown = true;
-    }, true);
-    document.addEventListener("mouseup", () => {
-        isDown = false;
-    }, true);
     cont.appendChild(newbook);
+    count += 2;
+    dragElement(newbook);
 }
 
 if (storageAvailable('localStorage')) {
@@ -121,7 +148,7 @@ class Book {
     }
 }
 
-Book.prototype.info = function() {
+Book.prototype.info = function () {
     console.log(this.title);
 }
 
