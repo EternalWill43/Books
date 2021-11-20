@@ -7,6 +7,15 @@ const addbtn = document.querySelector(".add");
 const formcontainer = document.querySelector(".formcontainer");
 const cancelbutton = document.querySelector(".canbtn");
 
+Storage.prototype.setObject = function(key, value) {
+    this.setItem(key, JSON.stringify(value));
+}
+
+Storage.prototype.getObject = function(key) {
+    var value = this.getItem(key);
+    return value && JSON.parse(value);
+}
+
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(elmnt.id)) {
@@ -97,11 +106,6 @@ function hideform() {
     formcontainer.style.display = "none";
 }
 
-function addFunc() {
-    const formcontainer = document.createElement("div");
-
-}
-
 let myLibrary = [];
 
 function addBookToLibrary(t, p, r) {
@@ -123,7 +127,7 @@ function addBookToPage(ele) {
     let newread = document.createElement("input");
     newread.classList.add("bookread");
     newread.setAttribute("type", "checkbox");
-    newread.addEventListener("change", () => {changeBookStyle(newread, newbook)});
+    newread.addEventListener("change", () => { changeBookStyle(newread, newbook) });
     if (ele.read) {
         newread.checked = true;
         newbook.classList.remove("book");
@@ -156,7 +160,8 @@ function addBookToPage(ele) {
         newbook.style.transform = `translate3d(${count}px, ${ycount}px, 0px)`;
         count += 201;
     }
-
+    myLibrary.push(ele);
+    localStorage.setItem(id, JSON.stringify(ele));
     dragElement(newbook);
 }
 
@@ -164,20 +169,32 @@ if (storageAvailable('localStorage')) {
     console.log("Storage available");
 }
 
-class Book {
-    constructor(t, p, r) {
-        this.title = t;
-        this.pages = p;
-        this.read = r;
-    }
+function Book(t, p, r) {
+        this.title = t,
+        this.pages = p,
+        this.read = r
 }
 
 Book.prototype.info = function () {
     console.log(this.title);
 }
 
+function parseStorage() {
+    let arr = Object.keys(localStorage);
+    console.log("Keys: " + arr.length);
+    for (let i = 0; i < arr.length; i++) {
+        let temp = JSON.parse(localStorage[arr[i]]);
+        console.log(temp);
+        addBookToLibrary(temp.title, temp.pages, temp.read);
+    }
+}
 
-addBookToLibrary("ISSTH", 2047, true);
-addBookToLibrary("GOGF", 1000, false);
+function onLoad() {
+    console.log("Items in storage: " + localStorage.length);
+    parseStorage();
+}
+
+onLoad();
+
 
 
