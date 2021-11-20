@@ -3,11 +3,13 @@ import { storageAvailable } from "./utility.js";
 var mousePosition;
 var offset = [0,0];
 var isDown = false;
+var dimensions;
 const cont = document.querySelector(".container");
 const subbtn = document.querySelector('.subbtn');
 const addbtn = document.querySelector(".add");
 const formcontainer = document.querySelector(".formcontainer");
 const cancelbutton = document.querySelector(".canbtn");
+
 cancelbutton.addEventListener("click", () => {
     hideform();
 }, {propagate: false});
@@ -90,28 +92,19 @@ function addBookToPage(ele) {
     newbook.appendChild(newlabel);
     newbook.appendChild(newread);
     newbook.appendChild(closebtn);
-    document.addEventListener('mouseup', function() {
-        isDown = false;
-    }, true);
-    newbook.addEventListener('mousedown', function(e) {
-        isDown = true;
-        offset = [
-             e.clientX,
-             e.clientY
-        ];
-    }, true);
-    document.addEventListener('mousemove', function(event) {
-        event.preventDefault();
+    newbook.addEventListener("mousemove", (e) => {
+        e.preventDefault();
         if (isDown) {
-            mousePosition = {
-    
-                x : event.clientX,
-                y : event.clientY
-    
-            };
-            newbook.style.left = (mousePosition.x - offset[0]) + 'px';
-            newbook.style.top  = (mousePosition.y - offset[1]) + 'px';
+            newbook.style.top = e.clientY - dimensions.y + "px";
+            newbook.style.left = e.clientX - dimensions.x + "px";
         }
+    }, true);
+    newbook.addEventListener("mousedown", ()=> {
+        dimensions = newbook.getBoundingClientRect();
+        isDown = true;
+    }, true);
+    document.addEventListener("mouseup", () => {
+        isDown = false;
     }, true);
     cont.appendChild(newbook);
 }
