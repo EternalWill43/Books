@@ -1,5 +1,8 @@
 import { storageAvailable } from "./utility.js";
 
+var mousePosition;
+var offset = [0,0];
+var isDown = false;
 const cont = document.querySelector(".container");
 const subbtn = document.querySelector('.subbtn');
 const addbtn = document.querySelector(".add");
@@ -87,6 +90,29 @@ function addBookToPage(ele) {
     newbook.appendChild(newlabel);
     newbook.appendChild(newread);
     newbook.appendChild(closebtn);
+    document.addEventListener('mouseup', function() {
+        isDown = false;
+    }, true);
+    newbook.addEventListener('mousedown', function(e) {
+        isDown = true;
+        offset = [
+             e.clientX,
+             e.clientY
+        ];
+    }, true);
+    document.addEventListener('mousemove', function(event) {
+        event.preventDefault();
+        if (isDown) {
+            mousePosition = {
+    
+                x : event.clientX,
+                y : event.clientY
+    
+            };
+            newbook.style.left = (mousePosition.x - offset[0]) + 'px';
+            newbook.style.top  = (mousePosition.y - offset[1]) + 'px';
+        }
+    }, true);
     cont.appendChild(newbook);
 }
 

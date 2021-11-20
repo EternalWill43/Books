@@ -39,6 +39,7 @@ body {
     border-radius: 10px;
     font-weight: 700;
     position: relative;
+    user-select: none;
 }
 
 .container {
