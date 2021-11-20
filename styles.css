@@ -48,7 +48,6 @@ body {
     display: flex;
     padding: 5px;
     text-align: center;
-    justify-content: center;
     gap: 20px;
     position: absolute;
 }

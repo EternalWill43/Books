@@ -1,8 +1,6 @@
 import { storageAvailable } from "./utility.js";
-var isDown = false;
-var dimensions;
-var leftfin, topfin;
-var count = 2;
+var count = 201;
+var ycount = 0;
 const cont = document.querySelector(".container");
 const subbtn = document.querySelector('.subbtn');
 const addbtn = document.querySelector(".add");
@@ -62,6 +60,14 @@ function handleSubmit() {
     let rea = document.getElementById('readid').checked;
     addBookToLibrary(tit, pag, rea);
 }
+
+formcontainer.addEventListener("keypress", (e) => {
+    if (e.code == "Enter") {
+        handleSubmit();
+        clearform();
+        hideform();
+    }
+});
 
 subbtn.addEventListener("click", () => {
     handleSubmit();
@@ -132,7 +138,15 @@ function addBookToPage(ele) {
     newbook.appendChild(newread);
     newbook.appendChild(closebtn);
     cont.appendChild(newbook);
-    count += 2;
+    if (newbook.id > 1) {
+        let w = cont.offsetWidth
+        if (count + 201 >= w) {
+            count = 0;
+            ycount += 210;
+        }
+        newbook.style.transform = `translate3d(${count}px, ${ycount}px, 0px)`;
+        count += 201;
+    }
     dragElement(newbook);
 }
 
