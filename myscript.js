@@ -10,39 +10,32 @@ const cancelbutton = document.querySelector(".canbtn");
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.getElementById(elmnt.id)) {
-        /* if present, the header is where you move the DIV from:*/
         document.getElementById(elmnt.id).onmousedown = dragMouseDown;
     } else {
-        /* otherwise, move the DIV from anywhere inside the DIV:*/
         elmnt.onmousedown = dragMouseDown;
     }
 
     function dragMouseDown(e) {
         e = e || window.event;
         e.preventDefault();
-        // get the mouse cursor position at startup:
         pos3 = e.clientX;
         pos4 = e.clientY;
         document.onmouseup = closeDragElement;
-        // call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
     }
 
     function elementDrag(e) {
         e = e || window.event;
         e.preventDefault();
-        // calculate the new cursor position:
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        // set the element's new position:
         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
     }
 
     function closeDragElement() {
-        /* stop moving when mouse button is released:*/
         document.onmouseup = null;
         document.onmousemove = null;
     }
@@ -59,6 +52,16 @@ function handleSubmit() {
     pag = parseInt(pag, 10);
     let rea = document.getElementById('readid').checked;
     addBookToLibrary(tit, pag, rea);
+}
+
+function changeBookStyle(e, b) {
+    if (e.checked) {
+        b.classList.remove("book");
+        b.classList.add("finbook");
+    } else {
+        b.classList.add("book");
+        b.classList.remove("finbook");
+    }
 }
 
 formcontainer.addEventListener("keypress", (e) => {
@@ -120,7 +123,12 @@ function addBookToPage(ele) {
     let newread = document.createElement("input");
     newread.classList.add("bookread");
     newread.setAttribute("type", "checkbox");
-    if (ele.read) newread.checked = true;
+    newread.addEventListener("change", () => {changeBookStyle(newread, newbook)});
+    if (ele.read) {
+        newread.checked = true;
+        newbook.classList.remove("book");
+        newbook.classList.add("finbook");
+    }
     newread.setAttribute("id", id);
     let newlabel = document.createElement("label");
     newlabel.setAttribute("for", id);
@@ -129,6 +137,7 @@ function addBookToPage(ele) {
     let closebtn = document.createElement("button");
     closebtn.classList.add("clb");
     closebtn.textContent = "Remove book";
+    console.log(newread);
     closebtn.addEventListener("click", () => {
         newbook.remove();
     }, { once: true, propagate: false });
@@ -147,6 +156,7 @@ function addBookToPage(ele) {
         newbook.style.transform = `translate3d(${count}px, ${ycount}px, 0px)`;
         count += 201;
     }
+
     dragElement(newbook);
 }
 
