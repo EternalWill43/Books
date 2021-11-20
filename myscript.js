@@ -95,8 +95,8 @@ function addBookToPage(ele) {
     newbook.addEventListener("mousemove", (e) => {
         e.preventDefault();
         if (isDown) {
-            newbook.style.top = e.clientY - dimensions.y + "px";
-            newbook.style.left = e.clientX - dimensions.x + "px";
+            newbook.style.top = e.clientY - dimensions.y - 100 + "px";
+            newbook.style.left = e.clientX - dimensions.x - 100 + "px";
         }
     }, true);
     newbook.addEventListener("mousedown", ()=> {
