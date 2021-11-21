@@ -6,12 +6,24 @@ const subbtn = document.querySelector('.subbtn');
 const addbtn = document.querySelector(".add");
 const formcontainer = document.querySelector(".formcontainer");
 const cancelbutton = document.querySelector(".canbtn");
+const tut = document.querySelector(".tut");
 
-Storage.prototype.setObject = function(key, value) {
+async function disappearme() {
+    tut.style.display = "none";
+    let first = false;
+    setTimeout( () => {
+        tut.style.display = "block";
+        setTimeout( () => {
+            tut.style.display = "none";
+        }, 1000)
+    }, 1000)
+}
+
+Storage.prototype.setObject = function (key, value) {
     this.setItem(key, JSON.stringify(value));
 }
 
-Storage.prototype.getObject = function(key) {
+Storage.prototype.getObject = function (key) {
     var value = this.getItem(key);
     return value && JSON.parse(value);
 }
@@ -143,6 +155,7 @@ function addBookToPage(ele) {
     closebtn.textContent = "Remove book";
     console.log(newread);
     closebtn.addEventListener("click", () => {
+        localStorage.removeItem(id);
         newbook.remove();
     }, { once: true, propagate: false });
     newbook.appendChild(newtitle);
@@ -170,7 +183,7 @@ if (storageAvailable('localStorage')) {
 }
 
 function Book(t, p, r) {
-        this.title = t,
+    this.title = t,
         this.pages = p,
         this.read = r
 }
@@ -195,6 +208,7 @@ function onLoad() {
 }
 
 onLoad();
+setTimeout(() => { disappearme(); }, 1000);
 
 
 
